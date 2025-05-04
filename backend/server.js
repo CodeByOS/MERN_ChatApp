@@ -3,6 +3,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const connect_DB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 //* Define Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/message", messageRoutes);
 
 //* Connected DB and then Run the server...
 connect_DB()
