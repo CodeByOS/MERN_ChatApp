@@ -6,7 +6,7 @@ router.post("/signup", signupUser );
 router.post("/login", loginUser );
 router.post("/logout", logoutUser );
 
-router.put("/update-profile", protectRoute, updateProfile);
+router.put("/profile", protectRoute, updateProfile);
 
 router.get("/check", protectRoute, checkAuthUser);
 

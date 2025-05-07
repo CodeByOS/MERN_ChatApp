@@ -87,7 +87,8 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
     try {
         res.cookie("jwt", "", { maxAge: 0 });
-        res.status(200).json({ message: "Logged Out Successfully.." });
+        res.status(200).json({ message: "Logged Out Successfully.."}); //* needs redirection after the user is logged out 
+
     } catch (err) {
         console.log("Error in logout Controller..!", err.message);
         res.status(500).json({ message: "Internal Server Error..!" });
@@ -104,7 +105,7 @@ const updateProfile = async (req, res) => {
         if(!profilePic) return res.status(400).json({ message: "Profile Picture is required..!" });
 
         // Upload image to Cloudinary
-        const uploadResponse = await cloudinary.uploader.upload(profilePic, { folder: "profile_pics" });
+        const uploadResponse = await cloudinary.uploader.upload(profilePic);
 
         // Update user document with new profilePic URL
         const updatedUser = await User.findByIdAndUpdate(

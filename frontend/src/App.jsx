@@ -1,25 +1,54 @@
-import React from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar'
-import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import SignUpPage from './pages/SignUpPage'
 import LoginPage from './pages/LoginPage'
 import SettingsPage from './pages/SettingsPage'
 import ProfilePage from './pages/ProfilePage'
 
+import { LoaderPinwheel } from 'lucide-react';
+
+import { useAuthStore } from "./store/useAuthStore"
+import { useEffect } from 'react'
+
+import { Toaster } from "react-hot-toast"
+import useThemeStore from './store/useThemeStore'
+
 const App = () => {
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+
+  const { theme } = useThemeStore();
+
+  useEffect(() => {
+    checkAuth()
+  }, []);
+
+  console.log(authUser);
+
+  if (isCheckingAuth && !authUser) return (
+    <div className='flex items-center justify-center h-screen' data-theme={theme}>
+      <LoaderPinwheel className="size-10 animate-spin" />
+    </div>
+  )
+
   return (
-    <div>
-      
+    <div data-theme={theme}>
       <Navbar />
 
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/signup' element={<SignUpPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/settings' element={<SettingsPage />} />
-        <Route path='/profile' element={<ProfilePage />} />
+        {/* ✅ Protected Home route */}
+        <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login" />} />
+
+        <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
+        <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
+
+        {/* <Route path='/settings' element={authUser ? <SettingsPage /> : <Navigate to="/login" />} /> */}
+
+        {/* ✅ Protected Profile route */}
+        <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
+
+      <Toaster />
     </div>
   )
 }
