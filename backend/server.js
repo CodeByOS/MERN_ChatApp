@@ -22,7 +22,7 @@ app.use(cors({
 
 //* Define Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/message", messageRoutes);
+app.use("/api/messages", messageRoutes);
 
 //* Connected DB and then Run the server...
 connect_DB()

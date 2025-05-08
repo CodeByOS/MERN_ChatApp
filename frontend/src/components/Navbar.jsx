@@ -18,7 +18,7 @@ const Navbar = () => {
             <div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center shadow-sm">
               <MessageCircle className="w-5 h-5 text-primary" />
             </div>
-            <h1 className="text-lg font-semibold tracking-tight">Hello World</h1>
+            <h1 className="text-lg font-semibold tracking-tight hidden lg:block">Hello World</h1>
           </Link>
 
           {/* Right Side */}
@@ -30,7 +30,6 @@ const Navbar = () => {
               value={theme}
               onChange={(e) => setTheme(e.target.value)}
             >
-              {/* Default prompt option */}
               <option value="" disabled>
                 Change theme
               </option>
