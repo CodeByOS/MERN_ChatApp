@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const Message = require("../models/Message");
 const cloudinary = require("../config/cloudinary");
+const { getReceiverSocketId } = require("../config/socket");
 
 //* Controller to get all users except the currently logged-in user (for sidebar display)
 const getUsersForSidebar = async (req, res) => {
@@ -61,7 +62,11 @@ const sendMessages = async (req, res) => {
             image: imgUrl,  //! This will be undefined if no image is sent
         });
 
-        //! Socket.io --> realtime functionality
+    
+        const receiverSocketId = getReceiverSocketId(receiverId);  //* Get the socket ID of the receiver
+        if(receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", { newMessage });  //* Emit the message to the receiver's socket
+        }
 
         //* Send back the created message as the response
         res.status(201).json(newMessage);
