@@ -16,15 +16,19 @@ const ChatContainer = () => {
   const messageEndRef = useRef(null);
 
   useEffect(() => {
+    // Ensure selectedUser exists and has a valid _id
     if (!selectedUser || !selectedUser._id) return;
 
+    // Fetch messages when the selected user changes
     getMessages(selectedUser._id);
     subscribeToMessages();
 
+    // Unsubscribe from messages when the component unmounts or when the selected user changes
     return () => unsubscribeFromMessages();
-  }, [selectedUser, selectedUser?._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+}, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
   useEffect(() => {
+    // Scroll to the bottom of the chat when new messages are received
     if (messageEndRef.current && messages) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -36,25 +40,24 @@ const ChatContainer = () => {
       <MessageSkeleton />
       <MessageInput />
     </div>
-  );
+  )
 
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message, index) => (
+        {messages.map((message) => (
           <div
             key={message._id}
             className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
-            ref={index === messages.length - 1 ? messageEndRef : null}
+            ref={messageEndRef}
           >
             <div className="chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
                   src={message.senderId === authUser._id ? authUser.profilePic || "/avatar.png" : selectedUser.profilePic || "/avatar.png"}
-                  alt="User profile picture"
-                />
+                  alt="profile pic" />
               </div>
             </div>
 
@@ -66,7 +69,7 @@ const ChatContainer = () => {
               {message.image && (
                 <img
                   src={message.image}
-                  alt="Message attachment"
+                  alt="Attachment"
                   className="sm:max-w-[200px] rounded-md mb-2"
                 />
               )}
