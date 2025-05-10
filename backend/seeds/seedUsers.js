@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 const connect_DB = require("../config/db");
 
 const users = [
@@ -97,10 +98,24 @@ const users = [
     profilePic: "https://randomuser.me/api/portraits/men/16.jpg",
   },
 ];
+
 const seedUsersToDB = async () => {
   try {
     await connect_DB();
-    const createdUsers = await User.insertMany(users);
+
+    // Delete old users
+    await User.deleteMany();
+    console.log("Old users removed.");
+
+    const createdUsers = [];
+
+    // Loop over each user and save (this will trigger pre-save hook)
+    for (const userData of users) {
+      const user = new User(userData);
+      await user.save(); // This triggers pre('save') and hashes password
+      createdUsers.push(user);
+    }
+
     console.log("Seeded Users:", createdUsers);
     process.exit();
   } catch (error) {
@@ -111,5 +126,3 @@ const seedUsersToDB = async () => {
 
 // Run the seeding function
 seedUsersToDB();
-
-
