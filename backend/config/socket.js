@@ -8,16 +8,17 @@ const server = http.createServer(app);
 // ! Socket.io setup
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173"]
-    }
+        origin: ["http://localhost:5173"],
+    },
 })
-
-//* Used to store online users
-const userSocketMap = {}; // { userId: socketId }
 
 const getReceiverSocketId = (userId) => {
     return userSocketMap[userId]; // Get the socketId for the userId from the userSocketMap
 }
+
+//* Used to store online users
+const userSocketMap = {}; // { userId: socketId }
+
 
 //! Listen for incoming connections
 io.on("connection", (socket) => {

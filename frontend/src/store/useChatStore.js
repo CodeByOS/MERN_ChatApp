@@ -49,28 +49,31 @@ export const useChatStore = create((set, get) => ({
         }
     },
 
+    //* Subscribe to incoming messages via socket
     subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
+        const { selectedUser } = get();
+        if (!selectedUser) return;
 
-    const socket = useAuthStore.getState().socket;
+        const socket = useAuthStore.getState().socket;
+        if (!socket) return; // Silent fail if socket isn't ready
 
-    socket.on("newMessage", (newMessage) => {
-        const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-        if (!isMessageSentFromSelectedUser) return;
+        socket.on("newMessage", (newMessage) => {
+            // Only append if message is from the selected user
+            if (newMessage.senderId !== selectedUser._id) return;
 
-        set({
-            messages: [...get().messages, newMessage],
-        });
+            set((state) => ({
+                messages: [...state.messages, newMessage],
+            }));
         });
     },
 
+    //* Unsubscribe from incoming messages
     unsubscribeFromMessages: () => {
         const socket = useAuthStore.getState().socket;
+        if (!socket) return; // Silent fail if socket isn't ready
         socket.off("newMessage");
     },
 
+    //* Set selected user for chat
     setSelectedUser: (selectedUser) => set({ selectedUser }),
-
-
 }));

@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 const useThemeStore = create((set) => ({
-    //* Initialize the theme state with the value from localStorage or default to 'cupcake'
-    theme: localStorage.getItem('theme') || 'cupcake',
+    //* Initialize the theme state with the value from localStorage or default to 'halloween'
+    theme: localStorage.getItem('theme') || 'halloween',
 
     //* Setter function to update the theme state and sync with localStorage
     setTheme: (newTheme) => {
