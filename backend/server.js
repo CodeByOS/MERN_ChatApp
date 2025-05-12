@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const connect_DB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const roomRoutes = require("./routes/roomRoutes");
 
 const cors = require("cors");
 
@@ -22,6 +23,7 @@ app.use(cors({
 //* Define Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/rooms", roomRoutes);
 
 //* Connect DB and then Run the server
 connect_DB()
